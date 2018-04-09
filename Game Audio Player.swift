@@ -61,7 +61,7 @@ class GameAudioPlayer {
     /**
      Plays a sound using a temporary SKAudioNode. This method may negatively impact performance if called many times in a short period of time. Use the `prepareSound` method to load resources, and `playPreparedSound` to play the loaded sound for performance improvements.
      */
-    func playSoundFileNamed(_ soundFile : String, duration : TimeInterval, doesLoop : Bool) {
+    public func playSoundFileNamed(_ soundFile : String, duration : TimeInterval, doesLoop : Bool) {
         playTemporaryAudioNode(named: soundFile, duration: duration, doesLoop: doesLoop)
     }
     
@@ -168,6 +168,7 @@ class GameAudioPlayer {
         audioNode.run(SKAction.sequence([.play(), wait]), completion: {
             audioNode.removeFromParent()
         })
+                                                                
     }
     
     private func setupHolderNode() {

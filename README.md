@@ -2,7 +2,7 @@
 How to use : <br />
 • Create a GameAudioPlayer instance <br />
 • Load your sounds with the `prepareSound` or `prepareSounds` method <br />
-• Play your sounds with the `playPreparedSound' method <br />
+• Play your sounds with the `playPreparedSound` method <br />
 • That's it! <br />
 
 # Example (inside a SKScene)
@@ -21,5 +21,5 @@ audioPlayer.playPreparedSound("explosion1", duration: 2, doesLoop: false)
 ```
 
 # Advices
-• For improved performance, disable temporary audio nodes by calling the `disableTemporarySounds` method. Finally, set the maxium number of instance a certain sound can have by calling the 'setMaxConrurrentPlayback' method.
-• You can use the 'playSoundFileNamed' method without preparing sounds before, but the performance will not be optional since it will be constantly creating new SKAudioNodes instances each time you call it.
+• For improved performance, disable temporary audio nodes by calling the `disableTemporarySounds` method. Finally, set the maxium number of instance a certain sound can have by calling the `setMaxConrurrentPlayback` method. <br />
+• You can use the `playSoundFileNamed` method without preparing sounds before, but the performance will not be optional since it will be constantly creating new SKAudioNode instances each time you call it.

@@ -18,6 +18,6 @@ audioPlayer.prepareSounds(soundFileNames: soundNames)
 audioPlayer.playPreparedSound("explosion1", duration: 2, doesLoop: false)
 ```
 
-# Advices
+# Performance Advices
 • For improved performance, disable the creation of temporary SKAudioNode instances by calling the `disableTemporarySounds` method. Finally, set the maxium number of instances a certain sound can have by calling the `setMaxConrurrentPlayback` method. <br />
 • You can use the `playSoundFileNamed` method without preparing sounds before, but the performance will not be optional since it will be constantly creating new SKAudioNode instances each time you call it.

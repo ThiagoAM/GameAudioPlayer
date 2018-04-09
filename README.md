@@ -1,5 +1,5 @@
 # Game Audio Player (Swift 4.1)
-How to use : <br />
+**How to use :** <br />
 • Create a GameAudioPlayer instance <br />
 • Load your sounds with the `prepareSound` or `prepareSounds` method <br />
 • Play your sounds with the `playPreparedSound` method <br />

@@ -10,10 +10,8 @@ How to use : <br />
 // Creating the instance:
 let audioPlayer = GameAudioPlayer(scene: self)
         
-// Loading the sounds:
-let soundNames = ["explosion1", "backgroundMusic3", "powerUpSound"]
-        
 // Preparing the sounds:
+let soundNames = ["explosion1", "backgroundMusic3", "powerUpSound"]        
 audioPlayer.prepareSounds(soundFileNames: soundNames)
         
 // Playing a sound:

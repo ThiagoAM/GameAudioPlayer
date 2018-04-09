@@ -38,7 +38,7 @@ class GameAudioPlayer {
     /**
      Plays a sound already preapred by the `prepareSound` method. If the sound was not prepared, dot it beforehand, or use the `playSoundFileNamed` method of this class.
      */
-    public func playPreparedSound(_ soundName : String, duration : TimeInterval, doesLoop : Bool) {
+    public func playPreparedSound(_ soundName : String, duration : TimeInterval = 1, doesLoop : Bool) {
         if let preparedAudioNodes = getAudioNodesFromArray(audioName: soundName) {
             var didPlayPausedSounds : Bool = false
             for audioNode in preparedAudioNodes {

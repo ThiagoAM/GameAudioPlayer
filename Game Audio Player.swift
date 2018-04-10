@@ -1,6 +1,7 @@
 //
 //  Game Audio Player.swift
 //  Created by Thiago Martins on 07/04/2018.
+//  github.com/ThiagoAM
 //
 
 import SpriteKit
@@ -8,7 +9,7 @@ import SpriteKit
 class GameAudioPlayer {
     
     // MARK: Properties
-    private weak var scene : SKScene?
+    private unowned var scene : SKScene
     private var audioNodes : [GameAudioNode] = [GameAudioNode]()
     private var temporaryAudioNodesEnabled : Bool = true
     private var holderNode : SKNode = SKNode()
@@ -17,6 +18,11 @@ class GameAudioPlayer {
     init(scene : SKScene) {
         self.scene = scene
         setupHolderNode()
+    }
+    
+    deinit {
+        self.removeEveryPreparedSound()
+        self.removeHolder()
     }
     
     // MARK: Public Methods
@@ -139,6 +145,7 @@ class GameAudioPlayer {
             if let audioNode = child as? GameAudioNode {
                 if audioNode.id == soundName {
                     audioNode.removeFromParent()
+                    audioNode.removeAllActions()
                 }
             }
         }
@@ -155,24 +162,34 @@ class GameAudioPlayer {
      Removes every prepared sound.
     */
     public func removeEveryPreparedSound() {
+        for node in audioNodes {
+            node.removeFromParent()
+            node.removeAllActions()
+        }
         holderNode.removeAllChildren()
         audioNodes.removeAll()
     }
     
     // MARK: Private Methods
+    private func removeHolder() {
+        self.holderNode.removeFromParent()
+        self.holderNode.removeAllActions()
+    }
+    
     private func playTemporaryAudioNode(named : String, duration : TimeInterval, doesLoop : Bool) {
-        let audioNode = SKAudioNode(fileNamed: named)
+        let audioNode = GameAudioNode(fileNamed: named)
         audioNode.autoplayLooped = doesLoop
         let wait = SKAction.wait(forDuration: duration)
         holderNode.addChild(audioNode)
         audioNode.run(SKAction.sequence([.play(), wait]), completion: {
+            audioNode.run(.stop())
             audioNode.removeFromParent()
+            audioNode.removeAllActions()
         })
-                                                                
     }
     
     private func setupHolderNode() {
-        self.scene?.addChild(holderNode)
+        self.scene.addChild(holderNode)
         holderNode.position = CGPoint(x: UIScreen.main.bounds.width/2, y: UIScreen.main.bounds.height/2)
     }
     
@@ -223,6 +240,5 @@ class GameAudioPlayer {
         var maxSimultaneousPlayback : Int = 1
         var isPlaying : Bool = false
     }
-    
 }
 

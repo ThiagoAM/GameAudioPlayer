@@ -3,7 +3,7 @@
 **How to use (easier way):** <br />
 • Create a `GameAudioPlayer` instance <br />
 • Play your sounds with the `playSoundFileNamed` method <br />
-• That's it! <br /><br />
+• That's it! <br />
 
 **How to use (better performance way):** <br />
 • Create a `GameAudioPlayer` instance <br />

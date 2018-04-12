@@ -13,7 +13,28 @@
 • Disable cached sounds with the `disableCachedSounds` method for even better performance (optional)
 • That's it! <br />
 
-# Example (inside a SKScene)
+# Example (easier way)
+```
+class TestGameScene : SKScene {
+    
+    // Declaring the GameAudioPlayer Instance:
+    var audioPlayer : GameAudioPlayer?
+    
+    override init() {
+        super.init()
+        
+        // Initializing GameAudioPlayer's Instance:
+        audioPlayer = GameAudioPlayer(scene: self)
+        
+        // Playing a sound:
+        audioPlayer?.playSoundFileNamed("explosion1", duration: 2, doesLoop: false)
+        
+    }
+    
+}
+```
+
+# Example (better performance way)
 ```
 class TestGameScene : SKScene {
     

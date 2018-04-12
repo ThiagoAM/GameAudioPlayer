@@ -15,13 +15,25 @@
 
 # Example (inside a SKScene)
 ```
-// Creating the instance:
-let audioPlayer = GameAudioPlayer(scene: self)
+class TestGameScene : SKScene {
+    
+    // Declaring the GameAudioPlayer Instance:
+    var audioPlayer : GameAudioPlayer?
+    
+    override init() {
+        super.init()
         
-// Preparing the sounds:
-let soundNames = ["explosion1", "backgroundMusic3", "powerUpSound"]        
-audioPlayer.prepareSounds(soundFileNames: soundNames)
+        // Initializing GameAudioPlayer's Instance:
+        audioPlayer = GameAudioPlayer(scene: self)
         
-// Playing a sound:
-audioPlayer.playPreparedSound("explosion1", duration: 2, doesLoop: false)
+        // Preparing the sounds:
+        let soundNames = ["explosion1", "backgroundMusic3", "powerUpSound"]
+        audioPlayer?.prepareSounds(soundFileNames: soundNames)
+        
+        // Playing a sound:
+        audioPlayer?.playPreparedSound("explosion1", duration: 2, doesLoop: false)
+        
+    }
+    
+}
 ```

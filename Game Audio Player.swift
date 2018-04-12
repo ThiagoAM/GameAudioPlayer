@@ -11,8 +11,10 @@ class GameAudioPlayer {
     // MARK: Properties
     private unowned var scene : SKScene
     private var audioNodes : [GameAudioNode] = [GameAudioNode]()
-    private var temporaryAudioNodesEnabled : Bool = true
+    private var cachedTempAudioNodes : [GameAudioNode] = [GameAudioNode]()
     private var holderNode : SKNode = SKNode()
+    private var cachedAudioNodesEnabled : Bool = true
+    private let audioCacheSize : Int = 32
     
     // MARK: Initialization
     init(scene : SKScene) {
@@ -21,30 +23,32 @@ class GameAudioPlayer {
     }
     
     deinit {
+        self.removeEveryCachedSound()
         self.removeEveryPreparedSound()
-        self.removeHolder()
+        self.removeHolder()                
     }
     
     // MARK: Public Methods
     
     /**
-     Improves performance by disabling the creation of temporary SKAudioNodes. Use the `setMaxConrurrentPlayback` method to setup the number of times certain sounds will be able to play at the same time.
+     Improves performance by disabling the creation of cached SKAudioNodes. Use the `setMaxConrurrentPlayback` method to setup the number of times certain sounds will be able to play at the same time.
      */
-    public func disableTemporarySounds() {
-        self.temporaryAudioNodesEnabled = false
+    public func disableCachedSounds() {
+        self.cachedAudioNodesEnabled = false
+        self.removeEveryCachedSound()
     }
     
     /**
-     Enables the creation of temporary SKAudioNodes. This option may negatively impact performance if the `playPreparedSound` method is called too many times in a short period of time. Use the `setMaxConrurrentPlayback` method for sounds that will play many times, and disable temporary sounds.
+     Enables the creation of cached SKAudioNodes.
      */
-    public func enableTemporarySounds() {
-        self.temporaryAudioNodesEnabled = true
+    public func enableCachedSounds() {
+        self.cachedAudioNodesEnabled = true
     }
     
     /**
      Plays a sound already preapred by the `prepareSound` method. If the sound was not prepared, dot it beforehand, or use the `playSoundFileNamed` method of this class.
      */
-    public func playPreparedSound(_ soundName : String, duration : TimeInterval = 1, doesLoop : Bool) {
+    public func playPreparedSound(_ soundName : String, duration : TimeInterval = 1, doesLoop : Bool = false) {
         if let preparedAudioNodes = getAudioNodesFromArray(audioName: soundName) {
             var didPlayPausedSounds : Bool = false
             for audioNode in preparedAudioNodes {
@@ -58,9 +62,11 @@ class GameAudioPlayer {
                     }
                 }
             }
-            if !didPlayPausedSounds && temporaryAudioNodesEnabled {
+            if !didPlayPausedSounds && cachedAudioNodesEnabled {
                 playTemporaryAudioNode(named: soundName, duration: duration, doesLoop: doesLoop)
             }
+        } else if cachedAudioNodesEnabled {
+            playTemporaryAudioNode(named: soundName, duration: duration, doesLoop: doesLoop)
         }
     }
     
@@ -78,6 +84,7 @@ class GameAudioPlayer {
         let newAudioNode = GameAudioNode(fileNamed: soundFileName)
         newAudioNode.autoplayLooped = false
         newAudioNode.id = soundFileName
+        newAudioNode.isPositional = false
         audioNodes.append(newAudioNode)
         holderNode.addChild(newAudioNode)
     }
@@ -166,26 +173,58 @@ class GameAudioPlayer {
             node.removeFromParent()
             node.removeAllActions()
         }
-        holderNode.removeAllChildren()
         audioNodes.removeAll()
     }
     
     // MARK: Private Methods
+    private func removeEveryCachedSound() {
+        for node in cachedTempAudioNodes {
+            node.removeFromParent()
+            node.removeAllActions()
+        }
+        cachedTempAudioNodes.removeAll()
+    }
+    
     private func removeHolder() {
+        holderNode.removeAllChildren()
         self.holderNode.removeFromParent()
         self.holderNode.removeAllActions()
     }
     
+    private func getAvailableCachedAudioNode(named : String) -> GameAudioNode? {
+        for node in cachedTempAudioNodes {
+            if node.id == named && node.isPlaying == false {
+                return node
+            }
+        }
+        return nil
+    }
+    
+    private func addCachedAudioNode(node : GameAudioNode) {
+        holderNode.addChild(node)
+        cachedTempAudioNodes.append(node)
+        if cachedTempAudioNodes.count > audioCacheSize {
+            cachedTempAudioNodes.first?.removeFromParent()
+            cachedTempAudioNodes.first?.removeAllActions()
+            cachedTempAudioNodes.removeFirst()
+        }
+    }
+    
     private func playTemporaryAudioNode(named : String, duration : TimeInterval, doesLoop : Bool) {
-        let audioNode = GameAudioNode(fileNamed: named)
-        audioNode.autoplayLooped = doesLoop
-        let wait = SKAction.wait(forDuration: duration)
-        holderNode.addChild(audioNode)
-        audioNode.run(SKAction.sequence([.play(), wait]), completion: {
-            audioNode.run(.stop())
-            audioNode.removeFromParent()
-            audioNode.removeAllActions()
-        })
+        if let cachedAudioNode = getAvailableCachedAudioNode(named: named) {
+            playAnAudioNode(cachedAudioNode, duration: duration, doesLoop: doesLoop)
+        } else {
+            let audioNode = GameAudioNode(fileNamed: named)
+            audioNode.id = named
+            audioNode.autoplayLooped = doesLoop
+            audioNode.isPlaying = true
+            self.addCachedAudioNode(node: audioNode)
+            let wait = SKAction.wait(forDuration: duration)
+            audioNode.run(SKAction.sequence([.play(), wait]), completion: {
+                audioNode.isPlaying = false
+                audioNode.run(.stop())
+            })
+        }
     }
     
     private func setupHolderNode() {

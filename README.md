@@ -14,7 +14,7 @@
 • That's it! <br />
 
 # Example (easier way)
-```
+```swift
 class TestGameScene : SKScene {
     
     // Declaring the GameAudioPlayer Instance:
@@ -35,7 +35,7 @@ class TestGameScene : SKScene {
 ```
 
 # Example (better performance way)
-```
+```swift
 class TestGameScene : SKScene {
     
     // Declaring the GameAudioPlayer Instance:

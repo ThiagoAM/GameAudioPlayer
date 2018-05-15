@@ -58,3 +58,5 @@ class TestGameScene : SKScene {
     
 }
 ```
+# License
+Game Audio Player project is licensed under MIT License ([MIT-License](MIT-License) or https://opensource.org/licenses/MIT)

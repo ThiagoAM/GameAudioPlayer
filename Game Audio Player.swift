@@ -46,7 +46,7 @@ class GameAudioPlayer {
     }
     
     /**
-     Plays a sound already preapred by the `prepareSound` method. If the sound was not prepared, dot it beforehand, or use the `playSoundFileNamed` method of this class.
+     Plays a sound already preapred by the `prepareSound` method.
      */
     public func playPreparedSound(_ soundName : String, duration : TimeInterval = 1, doesLoop : Bool = false) {
         if let preparedAudioNodes = getAudioNodesFromArray(audioName: soundName) {
@@ -229,7 +229,7 @@ class GameAudioPlayer {
     
     private func setupHolderNode() {
         self.scene.addChild(holderNode)
-        holderNode.position = CGPoint(x: UIScreen.main.bounds.width/2, y: UIScreen.main.bounds.height/2)
+        holderNode.position = CGPoint(x: self.scene.frame.width/2, y: self.scene.frame.height/2)
     }
     
     private func audioNodeIsHoldersChild(_ audioNode : GameAudioNode) -> Bool {
@@ -244,6 +244,7 @@ class GameAudioPlayer {
     }
     
     private func playAnAudioNode(_ audioNode : GameAudioNode, duration : TimeInterval, doesLoop : Bool) {
+        assuresThatAudioEngineIsRunning()
         audioNode.autoplayLooped = doesLoop
         audioNode.isPaused = false
         audioNode.isPlaying = true
@@ -256,6 +257,16 @@ class GameAudioPlayer {
             })
         } else {
             audioNode.run(.play())
+        }
+    }
+    
+    private func assuresThatAudioEngineIsRunning() {
+        if !self.scene.audioEngine.isRunning {
+            do {
+                try self.scene.audioEngine.start()
+            } catch {
+                print("Error: Could not start the SKScene's audioEngine.")
+            }
         }
     }
     

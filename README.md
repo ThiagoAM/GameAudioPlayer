@@ -1,4 +1,4 @@
-# Game Audio Player (Swift 4.1)
+# Game Audio Player (Swift 4.2)
 
 **How to use (easier way):** <br />
 • Create a `GameAudioPlayer` instance <br />

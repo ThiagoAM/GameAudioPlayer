@@ -1,11 +1,13 @@
 # Game Audio Player (Swift 4.2)
 
 **How to use (easier way):** <br />
+• Add the `GameAudioPlayer.swift` file to your project
 • Create a `GameAudioPlayer` instance <br />
 • Play your sounds with the `playSoundFileNamed` method <br />
 • That's it! <br />
 
 **How to use (better performance way):** <br />
+• Add the `GameAudioPlayer.swift` file to your project
 • Create a `GameAudioPlayer` instance <br />
 • Load your sounds with the `prepareSound` or `prepareSounds` method <br />
 • Set the maximum number of times a certain sound can play at the same time with the `setMaxConrurrentPlayback` method <br />

@@ -1,7 +1,7 @@
 # Game Audio Player (Swift 4.2)
 
 **How to use (easier way):** <br />
-• Add the `GameAudioPlayer.swift` file to your project
+• Add the `GameAudioPlayer.swift` file to your project <br/>
 • Create a `GameAudioPlayer` instance <br />
 • Play your sounds with the `playSoundFileNamed` method <br />
 • That's it! <br />

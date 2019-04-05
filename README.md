@@ -1,13 +1,13 @@
 # GameAudioPlayer (Swift 4.2)
 
-**How to use (easier way):** <br />
+**How to use (easier way):** <br/>
 • Add the `GameAudioPlayer.swift` file to your project <br/>
-• Create a `GameAudioPlayer` instance <br />
-• Play your sounds with the `playSoundFileNamed` method <br />
-• That's it! <br />
+• Create a `GameAudioPlayer` instance <br/>
+• Play your sounds with the `playSoundFileNamed` method <br/>
+• That's it! <br/>
 
 **How to use (better performance way):** <br />
-• Add the `GameAudioPlayer.swift` file to your project
+• Add the `GameAudioPlayer.swift` file to your project <br/>
 • Create a `GameAudioPlayer` instance <br />
 • Load your sounds with the `prepareSound` or `prepareSounds` method <br />
 • Set the maximum number of times a certain sound can play at the same time with the `setMaxConrurrentPlayback` method <br />
@@ -29,8 +29,7 @@ class TestGameScene : SKScene {
         audioPlayer = GameAudioPlayer(scene: self)
         
         // Playing a sound:
-        audioPlayer?.playSoundFileNamed("explosion1", duration: 2, doesLoop: false)
-        
+        audioPlayer?.playSoundFileNamed("explosion1", duration: 2, doesLoop: false)     
     }
     
 }
@@ -54,8 +53,7 @@ class TestGameScene : SKScene {
         audioPlayer?.prepareSounds(soundFileNames: soundNames)
         
         // Playing a sound:
-        audioPlayer?.playPreparedSound("explosion1", duration: 2, doesLoop: false)
-        
+        audioPlayer?.playPreparedSound("explosion1", duration: 2, doesLoop: false)        
     }
     
 }

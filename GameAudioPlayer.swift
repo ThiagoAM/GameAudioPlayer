@@ -48,33 +48,33 @@ class GameAudioPlayer {
     /**
      Plays a sound already preapred by the `prepareSound` method.
      */
-    public func playPreparedSound(_ soundName : String, duration : TimeInterval = 1, doesLoop : Bool = false) {
+    public func playPreparedSound(_ soundName : String, duration : TimeInterval = 1, doesLoop : Bool = false, volume : Float = 1.0) {
         if let preparedAudioNodes = getAudioNodesFromArray(audioName: soundName) {
             var didPlayPausedSounds : Bool = false
             for audioNode in preparedAudioNodes {
                 if !audioNode.isPlaying {
                     if audioNode.isPaused {
-                        playAnAudioNode(audioNode, duration: duration, doesLoop: doesLoop)
+                        playAnAudioNode(audioNode, duration: duration, doesLoop: doesLoop, volume: volume)
                         didPlayPausedSounds = true
                     } else {
-                        playAnAudioNode(audioNode, duration: duration, doesLoop: doesLoop)
+                        playAnAudioNode(audioNode, duration: duration, doesLoop: doesLoop, volume: volume)
                         return
                     }
                 }
             }
             if !didPlayPausedSounds && cachedAudioNodesEnabled {
-                playTemporaryAudioNode(named: soundName, duration: duration, doesLoop: doesLoop)
+                playTemporaryAudioNode(named: soundName, duration: duration, doesLoop: doesLoop, volume: volume)
             }
         } else if cachedAudioNodesEnabled {
-            playTemporaryAudioNode(named: soundName, duration: duration, doesLoop: doesLoop)
+            playTemporaryAudioNode(named: soundName, duration: duration, doesLoop: doesLoop, volume: volume)
         }
     }
     
     /**
      Plays a sound using a temporary SKAudioNode. This method may negatively impact performance if called many times in a short period of time. Use the `prepareSound` method to load resources, and `playPreparedSound` to play the loaded sound for performance improvements.
      */
-    public func playSoundFileNamed(_ soundFile : String, duration : TimeInterval, doesLoop : Bool) {
-        playTemporaryAudioNode(named: soundFile, duration: duration, doesLoop: doesLoop)
+    public func playSoundFileNamed(_ soundFile : String, duration : TimeInterval, doesLoop : Bool, volume : Float = 1.0) {
+        playTemporaryAudioNode(named: soundFile, duration: duration, doesLoop: doesLoop, volume: volume)
     }
     
     /**
@@ -210,9 +210,9 @@ class GameAudioPlayer {
         }
     }
     
-    private func playTemporaryAudioNode(named : String, duration : TimeInterval, doesLoop : Bool) {
+    private func playTemporaryAudioNode(named : String, duration : TimeInterval, doesLoop : Bool, volume : Float) {
         if let cachedAudioNode = getAvailableCachedAudioNode(named: named) {
-            playAnAudioNode(cachedAudioNode, duration: duration, doesLoop: doesLoop)
+            playAnAudioNode(cachedAudioNode, duration: duration, doesLoop: doesLoop, volume: volume)
         } else {
             let audioNode = GameAudioNode(fileNamed: named)
             audioNode.id = named
@@ -220,6 +220,7 @@ class GameAudioPlayer {
             audioNode.isPlaying = true
             self.addCachedAudioNode(node: audioNode)
             let wait = SKAction.wait(forDuration: duration)
+            audioNode.run(.changeVolume(to: volume, duration: 0))
             audioNode.run(SKAction.sequence([.play(), wait]), completion: {
                 audioNode.isPlaying = false
                 audioNode.run(.stop())
@@ -243,11 +244,13 @@ class GameAudioPlayer {
         return false
     }
     
-    private func playAnAudioNode(_ audioNode : GameAudioNode, duration : TimeInterval, doesLoop : Bool) {
+    private func playAnAudioNode(_ audioNode : GameAudioNode, duration : TimeInterval, doesLoop : Bool, volume : Float) {
         assuresThatAudioEngineIsRunning()
         audioNode.autoplayLooped = doesLoop
         audioNode.isPaused = false
         audioNode.isPlaying = true
+        
+        audioNode.run(.changeVolume(to: volume, duration: 0))
         if !doesLoop {
             let wait = SKAction.wait(forDuration: duration)
             let sequence = SKAction.sequence([.play(), wait])
@@ -291,4 +294,3 @@ class GameAudioPlayer {
         var isPlaying : Bool = false
     }
 }
-

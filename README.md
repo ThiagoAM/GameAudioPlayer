@@ -1,4 +1,4 @@
-# GameAudioPlayer (Swift 4.2)
+# GameAudioPlayer (Swift 5.0 or 4.2)
 
 **How to use (easier way):** <br/>
 • Add the `GameAudioPlayer.swift` file to your project <br/>

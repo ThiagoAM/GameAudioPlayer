@@ -9,7 +9,7 @@ import SpriteKit
 class GameAudioPlayer {
     
     // MARK: Properties
-    private unowned var scene: SKScene
+    private unowned let scene: SKScene
     private var audioNodes: [GameAudioNode] = [GameAudioNode]()
     private var cachedTempAudioNodes: [GameAudioNode] = [GameAudioNode]()
     private var holderNode: SKNode = SKNode()
@@ -101,7 +101,7 @@ class GameAudioPlayer {
     /**
      Sets the maximum number of times a certain prepared sound can be played in a short period of time.
      */
-    public func setMaxConrurrentPlayback(_ forPreparedSoundNamed: String, value: Int) {
+    public func setMaxConcurrentPlayback(_ forPreparedSoundNamed: String, value: Int) {
         removePreparedSound(forPreparedSoundNamed)
         if value > 0 {
             for _ in 1...value {

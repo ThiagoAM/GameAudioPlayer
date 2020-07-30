@@ -10,7 +10,7 @@
 • Add the `GameAudioPlayer.swift` file to your project <br/>
 • Create a `GameAudioPlayer` instance <br />
 • Load your sounds with the `prepareSound` or `prepareSounds` method <br />
-• Set the maximum number of times a certain sound can play at the same time with the `setMaxConrurrentPlayback` method <br />
+• Set the maximum number of times a certain sound can play at the same time with the `setMaxConcurrentPlayback` method <br />
 • Disable cached sounds with the `disableCachedSounds` method for even better performance (optional) <br />
 • Play your sounds with the `playPreparedSound` method <br />
 • That's it! <br />

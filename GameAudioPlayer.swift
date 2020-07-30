@@ -8,7 +8,7 @@ import SpriteKit
 
 class GameAudioPlayer {
     
-    // MARK: Properties
+    // MARK: Private Properties:
     private unowned let scene: SKScene
     private var audioNodes: [GameAudioNode] = [GameAudioNode]()
     private var cachedTempAudioNodes: [GameAudioNode] = [GameAudioNode]()
@@ -16,22 +16,23 @@ class GameAudioPlayer {
     private var cachedAudioNodesEnabled: Bool = true
     private let audioCacheSize: Int = 32
     
-    // MARK: Initialization
+    // MARK: Initialization:
     init(scene: SKScene) {
         self.scene = scene
         setupHolderNode()
     }
     
+    // MARK: Deinitialization:
     deinit {
         self.removeEveryCachedSound()
         self.removeEveryPreparedSound()
         self.removeHolder()
     }
     
-    // MARK: Public Methods
+    // MARK: Public Methods:
     
     /**
-     Improves performance by disabling the creation of cached SKAudioNodes. Use the `setMaxConrurrentPlayback` method to setup the number of times certain sounds will be able to play at the same time.
+     Improves performance by disabling the creation of cached SKAudioNodes. Use the `setMaxConcurrentPlayback` method to setup the number of times certain sounds will be able to play at the same time.
      */
     public func disableCachedSounds() {
         self.cachedAudioNodesEnabled = false
@@ -176,7 +177,7 @@ class GameAudioPlayer {
         audioNodes.removeAll()
     }
     
-    // MARK: Private Methods
+    // MARK: Private Methods:
     private func removeEveryCachedSound() {
         for node in cachedTempAudioNodes {
             node.removeFromParent()
@@ -287,7 +288,11 @@ class GameAudioPlayer {
         }
     }
     
-    // MARK: GameAudioNode Class
+}
+
+// MARK: Internal Classes Extension:
+extension GameAudioPlayer {
+    
     class GameAudioNode: SKAudioNode {
         var id: String = ""
         var maxSimultaneousPlayback: Int = 1

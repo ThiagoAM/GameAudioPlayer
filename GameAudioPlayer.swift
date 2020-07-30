@@ -9,15 +9,15 @@ import SpriteKit
 class GameAudioPlayer {
     
     // MARK: Properties
-    private unowned var scene : SKScene
-    private var audioNodes : [GameAudioNode] = [GameAudioNode]()
-    private var cachedTempAudioNodes : [GameAudioNode] = [GameAudioNode]()
-    private var holderNode : SKNode = SKNode()
-    private var cachedAudioNodesEnabled : Bool = true
-    private let audioCacheSize : Int = 32
+    private unowned var scene: SKScene
+    private var audioNodes: [GameAudioNode] = [GameAudioNode]()
+    private var cachedTempAudioNodes: [GameAudioNode] = [GameAudioNode]()
+    private var holderNode: SKNode = SKNode()
+    private var cachedAudioNodesEnabled: Bool = true
+    private let audioCacheSize: Int = 32
     
     // MARK: Initialization
-    init(scene : SKScene) {
+    init(scene: SKScene) {
         self.scene = scene
         setupHolderNode()
     }
@@ -25,7 +25,7 @@ class GameAudioPlayer {
     deinit {
         self.removeEveryCachedSound()
         self.removeEveryPreparedSound()
-        self.removeHolder()                
+        self.removeHolder()
     }
     
     // MARK: Public Methods
@@ -48,9 +48,9 @@ class GameAudioPlayer {
     /**
      Plays a sound already preapred by the `prepareSound` method.
      */
-    public func playPreparedSound(_ soundName : String, duration : TimeInterval = 1, doesLoop : Bool = false, volume : Float = 1.0) {
+    public func playPreparedSound(_ soundName: String, duration: TimeInterval = 1, doesLoop: Bool = false, volume: Float = 1.0) {
         if let preparedAudioNodes = getAudioNodesFromArray(audioName: soundName) {
-            var didPlayPausedSounds : Bool = false
+            var didPlayPausedSounds: Bool = false
             for audioNode in preparedAudioNodes {
                 if !audioNode.isPlaying {
                     if audioNode.isPaused {
@@ -73,14 +73,14 @@ class GameAudioPlayer {
     /**
      Plays a sound using a temporary SKAudioNode. This method may negatively impact performance if called many times in a short period of time. Use the `prepareSound` method to load resources, and `playPreparedSound` to play the loaded sound for performance improvements.
      */
-    public func playSoundFileNamed(_ soundFile : String, duration : TimeInterval, doesLoop : Bool, volume : Float = 1.0) {
+    public func playSoundFileNamed(_ soundFile: String, duration: TimeInterval, doesLoop: Bool, volume: Float = 1.0) {
         playTemporaryAudioNode(named: soundFile, duration: duration, doesLoop: doesLoop, volume: volume)
     }
     
     /**
      Prepares a sound to be played later by the `playPreparedSound' method.
-    */
-    public func prepareSound(soundFileName : String) {
+     */
+    public func prepareSound(soundFileName: String) {
         let newAudioNode = GameAudioNode(fileNamed: soundFileName)
         newAudioNode.autoplayLooped = false
         newAudioNode.id = soundFileName
@@ -92,7 +92,7 @@ class GameAudioPlayer {
     /**
      Prepares multiple sounds to be played later by the `playPreparedSound' method.
      */
-    public func prepareSounds(soundFileNames : [String]) {
+    public func prepareSounds(soundFileNames: [String]) {
         for name in soundFileNames {
             prepareSound(soundFileName: name)
         }
@@ -100,8 +100,8 @@ class GameAudioPlayer {
     
     /**
      Sets the maximum number of times a certain prepared sound can be played in a short period of time.
-    */
-    public func setMaxConrurrentPlayback(_ forPreparedSoundNamed : String, value : Int) {
+     */
+    public func setMaxConrurrentPlayback(_ forPreparedSoundNamed: String, value: Int) {
         removePreparedSound(forPreparedSoundNamed)
         if value > 0 {
             for _ in 1...value {
@@ -114,9 +114,9 @@ class GameAudioPlayer {
     
     /**
      Checks if a certain prepared sound is currently playing.
-    */
-    public func soundIsPlaying(_ soundName : String) -> Bool {
-        var isPlaying : Bool = false
+     */
+    public func soundIsPlaying(_ soundName: String) -> Bool {
+        var isPlaying: Bool = false
         if let tempAudioNodes = getAudioNodesFromArray(audioName: soundName) {
             for audioNode in tempAudioNodes {
                 if audioNode.id == soundName {
@@ -133,8 +133,8 @@ class GameAudioPlayer {
     
     /**
      Pauses a prepared sound.
-    */
-    public func pausePreparedSound(_ soundName : String) {
+     */
+    public func pausePreparedSound(_ soundName: String) {
         if let preparedAudioNodes = getAudioNodesFromArray(audioName: soundName) {
             for audioNode in preparedAudioNodes {
                 audioNode.isPlaying = false
@@ -146,8 +146,8 @@ class GameAudioPlayer {
     
     /**
      Removes a prepared sound.
-    */
-    public func removePreparedSound(_ soundName : String) {
+     */
+    public func removePreparedSound(_ soundName: String) {
         for child in holderNode.children {
             if let audioNode = child as? GameAudioNode {
                 if audioNode.id == soundName {
@@ -156,7 +156,7 @@ class GameAudioPlayer {
                 }
             }
         }
-        var counter : Int = 0
+        var counter: Int = 0
         for audioNode in self.audioNodes {
             if audioNode.id == soundName {
                 self.audioNodes.remove(at: counter)
@@ -167,7 +167,7 @@ class GameAudioPlayer {
     
     /**
      Removes every prepared sound.
-    */
+     */
     public func removeEveryPreparedSound() {
         for node in audioNodes {
             node.removeFromParent()
@@ -191,7 +191,7 @@ class GameAudioPlayer {
         self.holderNode.removeAllActions()
     }
     
-    private func getAvailableCachedAudioNode(named : String) -> GameAudioNode? {
+    private func getAvailableCachedAudioNode(named: String) -> GameAudioNode? {
         for node in cachedTempAudioNodes {
             if node.id == named && node.isPlaying == false {
                 return node
@@ -200,7 +200,7 @@ class GameAudioPlayer {
         return nil
     }
     
-    private func addCachedAudioNode(node : GameAudioNode) {
+    private func addCachedAudioNode(node: GameAudioNode) {
         holderNode.addChild(node)
         cachedTempAudioNodes.append(node)
         if cachedTempAudioNodes.count > audioCacheSize {
@@ -210,7 +210,7 @@ class GameAudioPlayer {
         }
     }
     
-    private func playTemporaryAudioNode(named : String, duration : TimeInterval, doesLoop : Bool, volume : Float) {
+    private func playTemporaryAudioNode(named: String, duration: TimeInterval, doesLoop: Bool, volume: Float) {
         if let cachedAudioNode = getAvailableCachedAudioNode(named: named) {
             playAnAudioNode(cachedAudioNode, duration: duration, doesLoop: doesLoop, volume: volume)
         } else {
@@ -233,7 +233,7 @@ class GameAudioPlayer {
         holderNode.position = CGPoint(x: self.scene.frame.width/2, y: self.scene.frame.height/2)
     }
     
-    private func audioNodeIsHoldersChild(_ audioNode : GameAudioNode) -> Bool {
+    private func audioNodeIsHoldersChild(_ audioNode: GameAudioNode) -> Bool {
         for child in holderNode.children {
             if let audioNodeChild = child as? GameAudioNode {
                 if audioNodeChild == audioNode {
@@ -244,7 +244,7 @@ class GameAudioPlayer {
         return false
     }
     
-    private func playAnAudioNode(_ audioNode : GameAudioNode, duration : TimeInterval, doesLoop : Bool, volume : Float) {
+    private func playAnAudioNode(_ audioNode: GameAudioNode, duration: TimeInterval, doesLoop: Bool, volume: Float) {
         assuresThatAudioEngineIsRunning()
         audioNode.autoplayLooped = doesLoop
         audioNode.isPaused = false
@@ -273,7 +273,7 @@ class GameAudioPlayer {
         }
     }
     
-    private func getAudioNodesFromArray(audioName : String) -> [GameAudioNode]? {
+    private func getAudioNodesFromArray(audioName: String) -> [GameAudioNode]? {
         var tempAudioNodes = [GameAudioNode]()
         for audioNode in self.audioNodes {
             if audioNode.id == audioName {
@@ -288,9 +288,10 @@ class GameAudioPlayer {
     }
     
     // MARK: GameAudioNode Class
-    class GameAudioNode : SKAudioNode {
-        var id : String = ""
-        var maxSimultaneousPlayback : Int = 1
-        var isPlaying : Bool = false
+    class GameAudioNode: SKAudioNode {
+        var id: String = ""
+        var maxSimultaneousPlayback: Int = 1
+        var isPlaying: Bool = false
     }
+    
 }
